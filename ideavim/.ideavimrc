@@ -1,0 +1,389 @@
+let mapleader=" "
+let g:WhichKeyDesc_leader = "<leader> Leader"
+" .ideavimrc is a configuration file for IdeaVim plugin. It uses
+" If not running interactively, don't do anything
+" You can find a list of commands here: https://jb.gg/h38q75
+" Find more examples here: https://jb.gg/share-ideavimrc
+" -- Suggested options --
+" Show a few lines of context around the cursor. Note that this makes the
+" text scroll if you mouse-click near the start or end of the window.
+set relativenumber number
+set scrolloff=5
+
+" -- search settings
+" highlight search result and allow clearing the highlight with <esc>
+set hlsearch
+noremap <Esc> :nohlsearch<cr>
+" ignore case but allow case sensitive search by typing capital case letters
+set ignorecase
+set smartcase
+" search while typing
+set incsearch
+" which key settings
+
+" Don't use Ex mode, use Q for formatting.
+map Q gq
+
+""" Idea specific settings ------------------
+set ideajoin
+set ideastatusicon=gray
+set idearefactormode=keep
+set ideamarks
+
+" --- Enable IdeaVim plugins https://jb.gg/ideavim-plugins
+set commentary
+set easymotion
+set which-key
+set surround
+set multicursor
+set NERDTree
+set highlightedyank
+set anyobject
+set peekaboo
+
+" which key settings
+set notimeout
+let g:WhichKey_ShowVimActions = "false"
+" set how the elements should be ordered
+let g:WhichKey_SortOrder = "by_key_prefix_last"
+" set if the sorting should be case-sensitive or not
+let g:WhichKey_SortCaseSensitive = "false"
+
+" -- Leader level mappings
+map <leader>e <Action>(ActivateProjectToolWindow)
+let g:WhichKeyDesc_explorer = "<leader>e Explorer"
+map <leader>E <Action>(SelectInProjectView)
+let g:WhichKeyDesc_select_in_explorer = "<leader>E Select in Explorer"
+
+map <leader>y "+y
+xnoremap <leader>y "+y
+let g:WhichKeyDesc_yank_to_system_c  = "<leader>y Yank to system clipboard"
+map <leader>p "+p
+xnoremap <leader>p "+p
+let g:WhichKeyDesc_paste_from_system_cb = "<leader>p Paste from system clipboard"
+
+map <leader>r :source ~/.ideavimrc<CR>
+let g:WhichKeyDesc_source_ideavimrc = "<leader>r Source .ideavimrc"
+
+map <leader>S <Action>(Scratch.ShowFilesPopup)
+let g:WhichKeyDesc_select_scratch_buffer = "<leader>S Select Scratch"
+map <leader>. <Action>(NewScratchFile)
+let g:WhichKeyDesc_new_scratch = "<leader>. New scratch file"
+map <leader>, <Action>(RecentFiles)
+let g:WhichKeyDesc_recent_files = "<leader>, Recent files"
+nmap <leader><Space> <Action>(GotoFile)
+let g:WhichKeyDesc_find_files = "<leader><Space> Find files"
+map <leader>a <Action>(Annotate)
+let g:WhichKeyDesc_annotate = "<leader>a Annotate"
+map <leader>b <Action>(ToggleLineBreakpoint)
+let g:WhichKeyDesc_toggle_breakpoint = "<leader>b Toggle breakpoint"
+map <leader>o <Action>(FileStructurePopup)
+let g:WhichKeyDesc_file_structure = "<leader>o File structure"
+
+" using Fuzzier (grep not working on windows with wsl)
+nmap <leader>/ <Action>(com.mituuz.fuzzier.grep.FuzzyGrepCI)
+let g:WhichKeyDesc_grep = "<leader>/ Grep (Project dir)"
+
+" not using Fuzzier (Intellij native find)
+"nmap <leader>/ <Action>(FindInPath)
+"let g:WhichKeyDesc_grep = "<leader>/ Grep (Project dir)"
+
+" create splits
+nmap <leader>- <Action>(TabShiftActions.ShiftDown)
+let g:WhichKeyDesc_split_vertical_quick = "<leader>- Split vertical"
+nmap <leader><Bar> <Action>(TabShiftActions.ShiftRight)
+let g:WhichKeyDesc_split_horizontal_quick = "<leader><Bar> Split horizontal"
+
+"" -- easymotion bindings
+nmap s <Plug>(easymotion-bd-f)
+let g:WhichKeyDesc_easymotion_find = "s Easymotion find"
+nmap f <Plug>(easymotion-f)
+let g:WhichKeyDesc_easymotion_char_f = "f Easymotion character forward"
+nmap F <Plug>(easymotion-F)
+let g:WhichKeyDesc_easymotion_char_b = "F Easymotion character backward"
+
+" allow navigation with ctrl h,j,k,l
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
+
+"--- goto ---"
+let g:WhichKeyDesc_go_to = "g goto"
+
+nmap g? <Action>(ShowNavBar)
+let g:WhichKeyDesc_show_navbar = "g? Navigation bar"
+nmap gd <Action>(GotoDeclaration)
+let g:WhichKeyDesc_go_to_declaration_usages = "gd Declaration or usages"
+nmap gh <Action>(TypeHierarchy)
+let g:WhichKeyDesc_go_to_type_hierarchy = "gh Type Hierarchy"
+nmap gk <Action>(ParameterInfo)
+let g:WhichKeyDesc_go_to_parameter_info = "gk Parameter info"
+nmap gK <Action>(QuickImplementations)
+let g:WhichKeyDesc_go_to_quick_definition = "gK Quick definition"
+nmap gy <Action>(GotoTypeDeclaration)
+let g:WhichKeyDesc_go_to_type_declaration = "gy T(y)pe declaration"
+nmap gI <Action>(GotoImplementation)
+let g:WhichKeyDesc_go_to_implementaton = "gI Implementation"
+nmap gt <Action>(GotoTest)
+let g:WhichKeyDesc_go_to_test = "gt Test"
+
+"   --- commentary plugin
+let g:WhichKeyDesc_commentary = "gc comment"
+let g:WhichKeyDesc_line_comment_v1 = "gcc Comment with line comment"
+let g:WhichKeyDesc_uncomment_next = "gcu Uncomment next commented lines"
+
+" -- Window management (splits)
+sethandler <c-w> a:vim
+let g:WhichKeyDesc_window = "<c-w> Windows"
+
+" create splits
+nmap <c-w>s <Action>(TabShiftActions.ShiftDown)
+let g:WhichKeyDesc_split_vertical = "<c-w>s Split vertical"
+nmap <c-w>v <Action>(TabShiftActions.ShiftRight)
+let g:WhichKeyDesc_split_horizontal = "<c-w>v Split horizontal"
+
+" move tabs between splits
+nmap <c-w>H <Action>(TabShiftActions.ShiftLeft)
+let g:WhichKeyDesc_go_to_left_split = "<c-w>H Go to left split"
+nmap <c-w>J <Action>(TabShiftActions.ShiftDown)
+let g:WhichKeyDesc_go_split_down = "<c-w>J Go to the split bellow"
+nmap <c-w>K <Action>(TabShiftActions.ShiftUp)
+let g:WhichKeyDesc_go_split_up = "<c-w>K Go to the upper split"
+nmap <c-w>L <Action>(TabShiftActions.ShiftRight)
+let g:WhichKeyDesc_go_to_right_split = "<c-w>L Go to right split"
+map <c-w>x <Action>(MoveEditorToOppositeTabGroup)
+let g:WhichKeyDesc_swap_split = "<c-w>x Swap current split with opposite"
+
+" close splits
+map <c-w>q <Action>(CloseActiveTabGroup)
+let g:WhichKeyDesc_close_current_split = "<c-w>q Close current split"
+map <c-w>u <Action>(UnsplitAll)
+let g:WhichKeyDesc_unsplit = "<c-w>u Unsplit all"
+
+" resize
+nmap <c-w>< <Action>(TabShiftActions.StretchLeft)
+let g:WhichKeyDesc_stretch_left_w = "<c-w>< Stretch left"
+nmap <c-,> <Action>(TabShiftActions.StretchLeft)
+let g:WhichKeyDesc_stretch_left_c = "<c-,> Stretch left"
+nmap <c-w>> <Action>(TabShiftActions.StretchRight)
+let g:WhichKeyDesc_stretch_right_w = "<c-w>> Stretch right"
+nmap <c-.> <Action>(TabShiftActions.StretchRight)
+let g:WhichKeyDesc_stretch_right_c = "<c-.> Stretch right"
+
+nmap <c-w>- <Action>(TabShiftActions.StretchDown)
+let g:WhichKeyDesc_stretch_down_w = "<c-w>- Stretch down"
+nmap <c--> <Action>(TabShiftActions.StretchDown)
+let g:WhichKeyDesc_stretch_down_c = "<c--> Stretch down"
+nmap <c-w>+ <Action>(TabShiftActions.StretchUp)
+let g:WhichKeyDesc_stretch_up_w = "<c-w>+ Stretch up"
+nmap <c-=> <Action>(TabShiftActions.StretchUp)
+let g:WhichKeyDesc_stretch_up_c = "<c-=> Stretch up"
+
+" -- previous/next [,]
+let g:WhichKeyDesc_previous = "[ prev"
+let g:WhichKeyDesc_next = "] next"
+
+map [b <Action>(PreviousTab)
+let g:WhichKeyDesc_prev_tab = "[b Previous Tab"
+map ]b <Action>(NextTab)
+let g:WhichKeyDesc_next_tab = "]b Next Tab"
+map ]d <Action>(GotoNextError)
+let g:WhichKeyDesc_next_error = "]b Next Error"
+map [d <Action>(GotoPreviousError)
+let g:WhichKeyDesc_previous_error = "]b Previous Error"
+
+map [p <Action>(PreviousProjectWindow)
+let g:WhichKeyDesc_prev_project = "[p Previous project"
+map ]p <Action>(NextProjectWindow)
+let g:WhichKeyDesc_next_project = "]p Next project"
+
+" ---- AnyObject ],[ mappings
+let g:WhichKeyDesc_prev_argument = "[a Previous argument"
+let g:WhichKeyDesc_next_argument = "]a Next argument"
+let g:WhichKeyDesc_prev_class = "[c Previous class"
+let g:WhichKeyDesc_next_class = "]c Next class"
+let g:WhichKeyDesc_prev_function = "[f Previous function"
+let g:WhichKeyDesc_next_function = "]f Next function"
+let g:WhichKeyDesc_prev_string = "[g Previous string"
+let g:WhichKeyDesc_next_string = "]g Next string"
+let g:WhichKeyDesc_prev_item = "[i Previous item"
+let g:WhichKeyDesc_next_item = "]i Next item"
+let g:WhichKeyDesc_prev_comment = "[k Previous comment"
+let g:WhichKeyDesc_next_comment = "]k Next comment"
+let g:WhichKeyDesc_prev_loop = "[l Previous loop"
+let g:WhichKeyDesc_next_loop = "]l Next loop"
+let g:WhichKeyDesc_prev_lambda_function = "[m Previous lambda aor function"
+let g:WhichKeyDesc_next_lambda_function = "]m Next lambda aor function"
+let g:WhichKeyDesc_prev_subword = "[u Previous subword"
+let g:WhichKeyDesc_next_subword = "]u Next subword"
+let g:WhichKeyDesc_prev_variable = "[v Previous variable"
+let g:WhichKeyDesc_next_variable = "]v Next variable"
+let g:WhichKeyDesc_prev_argoritem = "[x Previous argoritem"
+let g:WhichKeyDesc_next_argoritem = "]x Next argoritem"
+let g:WhichKeyDesc_prev_conditional = "[y Previous conditional"
+let g:WhichKeyDesc_next_conditional = "]y Next conditional"
+
+
+"" -- Buffer (tab) management --
+let g:WhichKeyDesc_buffer = "<leader>b Buffer"
+
+nmap H <Action>(PreviousTab)
+nmap L <Action>(NextTab)
+
+map <leader>bd <Action>(CloseEditor)
+let g:WhichKeyDesc_close_editor = "<leader>bd Close editor"
+map <leader>bl <Action>(CloseAllToTheLeft)
+let g:WhichKeyDesc_close_all_left = "<leader>bl Close editors to the left"
+map <leader>br <Action>(CloseAllToTheRight)
+let g:WhichKeyDesc_close_all_right = "<leader>br Close editors to the right"
+map <leader>bo <Action>(CloseAllEditorsButActive)
+let g:WhichKeyDesc_close_others = "<leader>bo Close other editors"
+map <leader>bp <Action>(PinActiveEditorTab)
+let g:WhichKeyDesc_toggle_pin = "<leader>bp Toggle pin"
+
+map <leader>n <Action>(NewClass)
+let g:WhichKeyDesc_new_class = "<leader>n New class"
+
+"-- Classes
+"map <leader>cf <Action>(GotoClass)
+
+"-- Code actions (refactor)
+let g:WhichKeyDesc_code = "<leader>c Code"
+
+map <leader>ca <Action>(Refactorings.QuickListPopupAction)
+let g:WhichKeyDesc_refactor = "<leader>ca Refactor..."
+map <leader>cA <Action>(Generate)
+let g:WhichKeyDesc_generate = "<leader>cA Generate..."
+map <leader>ca <Action>(Refactorings.QuickListPopupAction)
+let g:WhichKeyDesc_code_actions = "<leader>ca Code Action"
+map <leader>cl <Action>(GotoSymbol)
+let g:WhichKeyDesc_goto_symbols = "<leader>cl Goto symbols"
+map <leader>co <Action>(OptimizeImports)
+let g:WhichKeyDesc_optimize_imports = "<leader>co Optimize imports"
+map <leader>cr <Action>(RenameElement)
+let g:WhichKeyDesc_rename_element = "<leader>cr Rename element"
+map <leader>cf <Action>(ReformatCode)
+let g:WhichKeyDesc_format_code = "<leader>cf Reformat code"
+map <leader>cF <Action>(ShowReformatFileDialog)
+let g:WhichKeyDesc_format_file = "<leader>cF Reformat file..."
+map <leader>cs <Action>(SurroundWith)
+let g:WhichKeyDesc_code_surround = "<leader>cs Surround with..."
+map <leader>cS <Action>(Unwrap)
+let g:WhichKeyDesc_unwrap_code = "<leader>cS Unwrap..."
+map <leader>cc <Action>(CommentByLineComment)
+let g:WhichKeyDesc_line_comment = "<leader>cc Comment with line comment"
+
+"---- Code -> Extract
+let g:WhichKeyDesc_code_extract = "<leader>cx extract"
+map <leader>cxv <Action>(IntroduceVariable)
+let g:WhichKeyDesc_extract_variable = "<leader>cxv Variable"
+map <leader>cxV <Action>(IntroduceFunctionalVariable)
+let g:WhichKeyDesc_extract_f_variable = "<leader>cxV Functional variable"
+map <leader>cxc <Action>(IntroduceConstant)
+let g:WhichKeyDesc_extract_constant = "<leader>cxc Constant"
+map <leader>cxf <Action>(IntroduceField)
+let g:WhichKeyDesc_extract_field = "<leader>cxf Field"
+map <leader>cxp Action>(IntroduceParameter)
+let g:WhichKeyDesc_extract_parameter = "<leader>cxp Parameter"
+map <leader>cxP <Action>(IntroduceFunctionalParameter)
+let g:WhichKeyDesc_extract_f_parameter = "<leader>cxP Functional parameter"
+map <leader>cxo <Action>(IntroduceParameterObject)
+let g:WhichKeyDesc_extract_parameter_object = "<leader>cxo Parameter object"
+map <leader>cxm <Action>(ExtractMethod)
+let g:WhichKeyDesc_extract_method = "<leader>cxm Extract method"
+map <leader>cxd <Action>(ExtractClass)
+let g:WhichKeyDesc_extract_delegate = "<leader>cxd Delegate"
+map <leader>cxi <Action>(ExtractInterface)
+let g:WhichKeyDesc_extract_interface = "<leader>cxi Interface"
+map <leader>cxs <Action>(ExtractSuperclass)
+let g:WhichKeyDesc_extract_superclass = "<leader>cxs Superclass"
+
+"-- file /find --
+let g:WhichKeyDesc_file_find = "<leader>f find/file"
+map <leader>fe <Action>(ActivateProjectToolWindow)
+let g:WhichKeyDesc_file_explorer = "<leader>fe Explorer"
+map <leader>ff <Action>(com.mituuz.fuzzier.search.Fuzzier)
+let g:WhichKeyDesc_find_file = "<leader>ff Find files"
+map <leader>fg <Action>(com.mituuz.fuzzier.search.FuzzierVCS)
+let g:WhichKeyDesc_find_file_git = "<leader>fg Find files (git files)"
+map <leader>fm <Action>(com.mituuz.fuzzier.operation.FuzzyMover)
+let g:WhichKeyDesc_move_file = "<leader>fm Move file"
+map <leader>fp <Action>(OpenProjectWindows)
+let g:WhichKeyDesc_open_project_windows = "<leader>fp Projects"
+map <leader>fr <Action>(RecentFiles)
+let g:WhichKeyDesc_files_recent = "<leader>fr Recent files"
+map <leader>fR <Action>(RecentLocations)
+let g:WhichKeyDesc_locations_recent = "<leader>fR Recent locations"
+map <leader>ft <Action>(ActivateTerminalToolWindow)
+let g:WhichKeyDesc_files_terminal = "<leader>ft Terminal"
+
+" file new...
+let g:WhichKeyDesc_file_new = "<leader>fn New..."
+map <leader>fnf <Action>(NewFile)
+let g:WhichKeyDesc_new_file = "<leader>fnf New File"
+map <leader>fnc <Action>(NewClass)
+let g:WhichKeyDesc_new_class = "<leader>fnc New Class"
+map <leader>fng <Action>(Groovy.NewClass)
+let g:WhichKeyDesc_new_groovy_class = "<leader>fng New Groovy Class"
+map <leader>fnp <Action>(NewDir)
+let g:WhichKeyDesc_new_package = "<leader>fnp New Package/Directory"
+
+" find files with intellij finders
+let g:WhichKeyDesc_file_find_intellij = "<leader>F find/file intellij"
+map <leader>Ff <Action>(GotoFile)
+let g:WhichKeyDesc_find_file_intellij = "<leader>Ff Find files"
+
+"--- Git
+let g:WhichKeyDesc_git = "<leader>g Git"
+map <leader>gb <Action>(Annotate)
+let g:WhichKeyDesc_git_blame = "<leader>gb Git Blame"
+map <leader>gd <Action>(Vcs.ShowHistoryForBlock)
+let g:WhichKeyDesc_git_commits = "<leader>gd Git Commits"
+map <leader>gf <Action>(Vcs.ShowTabbedFileHistory)
+let g:WhichKeyDesc_git_file_history = "<leader>gf Git Current File History"
+map <leader>gl <Action>(Vcs.Show.Log)
+let g:WhichKeyDesc_git_log = "<leader>gl Git Log"
+
+" --- Search
+let g:WhichKeyDesc_search = "<leader>s Search"
+map <leader>ss <Action>(GotoSymbol)
+let g:WhichKeyDesc_search_symbols = "<leader>ss Search symbols"
+map <leader>sd <Action>(ActivateProblemsViewToolWindow)
+let g:WhichKeyDesc_problems = "<leader>sd Problems"
+map <leader>sj <Action>(RecentLocations)
+let g:WhichKeyDesc_search_locations = "<leader>sj Jumps"
+map <leader>sm <Action>(ActivateBookmarksToolWindow)
+let g:WhichKeyDesc_search_marks = "<leader>sm Bookmarks"
+map <leader>sr <Action>(ReplaceInPath)
+let g:WhichKeyDesc_search_replace = "<leader>sr Search and replace"
+map <leader>st <Action>(ActivateTODOToolWindow)
+let g:WhichKeyDesc_search_todo = "<leader>st Todo"
+map <leader>su <Action>(RecentChanges)
+let g:WhichKeyDesc_search_changes = "<leader>su Recent changes"
+
+" using Fuzzier (grep not working on windows with wsl)
+map <leader>sb <Action>(com.mituuz.fuzzier.grep.FuzzyGrepCurrentBufferCI)
+let g:WhichKeyDesc_grep_in_file = "<leader>sb Grep in file (buffer)"
+map <leader>sB <Action>(com.mituuz.fuzzier.grep.FuzzyGrepOpenTabsCI)
+let g:WhichKeyDesc_grep_open_files = "<leader>sB Grep open files"
+map <leader>sf <Action>(Find)
+let g:WhichKeyDesc_grep_in_file_intellij = "<leader>sf FInd in file (intellij)"
+map <leader>sg <Action>(com.mituuz.fuzzier.grep.FuzzyGrepCI)
+let g:WhichKeyDesc_grep_project_dir = "<leader>sg Grep (Project dir)"
+map <leader>sG <Action>(FindInPath)
+let g:WhichKeyDesc_find_in_path = "<leader>sG FInd in path (intellij)"
+
+" not using Fuzzier (Inrellij native find)
+"map <leader>sb <Action>(Find)
+"let g:WhichKeyDesc_grep_in_file = "<leader>sb Grep in file (buffer)"
+"map <leader>sg <Action>(FindInPath)
+"let g:WhichKeyDesc_grep_project_dir = "<leader>sg Grep (Project dir)"
+
+"--- UI
+let g:WhichKeyDesc_ui = "<leader>u ui"
+
+map <leader>uz <Action>(ToggleDistractionFreeMode)
+let g:WhichKeyDesc_distraction_free_mode = "<leader>uz Toggle distraction free mode"
+map <leader>uZ <Action>(ToggleZenMode)
+let g:WhichKeyDesc_zen_free_mode = "<leader>uZ Toggle zen mode"
