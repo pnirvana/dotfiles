@@ -1,0 +1,4 @@
+[manager]
+prepend_keymap = [
+  { on = [ "I" ], run = 'shell "/Applications/IntelliJ IDEA CE.app/Contents/MacOS/idea $@" --block' },
+]
