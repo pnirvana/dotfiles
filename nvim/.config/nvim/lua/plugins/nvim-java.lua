@@ -2,12 +2,29 @@ return {
   "nvim-java/nvim-java",
   config = function()
     require("java").setup()
+    vim.lsp.config("jdtls", {
+      settings = {
+        java = {
+          format = {
+            enabled = true,
+            settings = {
+              url = "file://" .. vim.fn.stdpath("config") .. "/code-styles/eclipse-java-formatter.xml",
+              profile = "Default",
+            },
+          },
+        },
+      },
+    })
     vim.lsp.enable("jdtls")
 
     -- Java-only mappings (buffer-local, created for every Java buffer)
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "java",
       callback = function(ev)
+        vim.bo[ev.buf].shiftwidth = 4
+        vim.bo[ev.buf].tabstop = 4
+        vim.bo[ev.buf].softtabstop = 4
+        vim.bo[ev.buf].expandtab = true
         local map = vim.keymap.set
         local opts = { buffer = ev.buf, silent = true }
 
