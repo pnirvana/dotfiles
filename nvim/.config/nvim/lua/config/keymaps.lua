@@ -18,3 +18,11 @@ vim.keymap.set("n", "<M-h>", "<cmd>vertical resize -5<cr>", { desc = "Resize lef
 vim.keymap.set("n", "<M-l>", "<cmd>vertical resize +5<cr>", { desc = "Resize right" })
 vim.keymap.set("n", "<M-j>", "<cmd>resize -5<cr>", { desc = "Resize down" })
 vim.keymap.set("n", "<M-k>", "<cmd>resize +5<cr>", { desc = "Resize up" })
+
+vim.keymap.set("n", "j", function()
+  return (vim.v.count > 5 and "m'" .. vim.v.count or "") .. "j"
+end, { expr = true, desc = "Down (add to jumplist when count > 5)" })
+
+vim.keymap.set("n", "k", function()
+  return (vim.v.count > 5 and "m'" .. vim.v.count or "") .. "k"
+end, { expr = true, desc = "Up (add to jumplist when count > 5)" })
