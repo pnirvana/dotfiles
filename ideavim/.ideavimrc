@@ -49,6 +49,10 @@ let g:WhichKey_SortOrder = "by_key_prefix_last"
 " set if the sorting should be case-sensitive or not
 let g:WhichKey_SortCaseSensitive = "false"
 
+" -- make j and k motions bigger than 5 add to the jumps list
+nnoremap <expr> j (v:count > 5 ? "m'" . v:count : "") . "j"
+nnoremap <expr> k (v:count > 5 ? "m'" . v:count : "") . "k"
+
 " -- Leader level mappings
 map <leader>e <Action>(ActivateProjectToolWindow)
 let g:WhichKeyDesc_explorer = "<leader>e Explorer"
@@ -71,12 +75,10 @@ map <leader>. <Action>(NewScratchFile)
 let g:WhichKeyDesc_new_scratch = "<leader>. New scratch file"
 map <leader>, <Action>(RecentFiles)
 let g:WhichKeyDesc_recent_files = "<leader>, Recent files"
-nmap <leader><Space> <Action>(GotoFile)
+nmap <leader><leader> <Action>(GotoFile)
 let g:WhichKeyDesc_find_files = "<leader><Space> Find files"
 map <leader>a <Action>(Annotate)
 let g:WhichKeyDesc_annotate = "<leader>a Annotate"
-map <leader>b <Action>(ToggleLineBreakpoint)
-let g:WhichKeyDesc_toggle_breakpoint = "<leader>b Toggle breakpoint"
 map <leader>o <Action>(FileStructurePopup)
 let g:WhichKeyDesc_file_structure = "<leader>o File structure"
 
@@ -93,6 +95,12 @@ nmap <leader>- <Action>(TabShiftActions.ShiftDown)
 let g:WhichKeyDesc_split_vertical_quick = "<leader>- Split vertical"
 nmap <leader><Bar> <Action>(TabShiftActions.ShiftRight)
 let g:WhichKeyDesc_split_horizontal_quick = "<leader><Bar> Split horizontal"
+
+" -- [] mappings
+nnoremap [<Space> maO<Esc>`a
+let g:WhichKeyDesc_create_line_above = "[<Space> Insert empty line above"
+nnoremap ]<Space> mao<Esc>`a
+let g:WhichKeyDesc_create_line_bellow = "]<Space> Insert empty line bellow"
 
 "" -- easymotion bindings
 nmap s <Plug>(easymotion-bd-f)
@@ -242,6 +250,15 @@ let g:WhichKeyDesc_close_others = "<leader>bo Close other editors"
 map <leader>bp <Action>(PinActiveEditorTab)
 let g:WhichKeyDesc_toggle_pin = "<leader>bp Toggle pin"
 
+" -- Debug --
+let g:WhichKeyDesc_debug = "<leader>b Debug"
+
+
+
+map <leader>b <Action>(ToggleLineBreakpoint)
+let g:WhichKeyDesc_toggle_breakpoint = "<leader>b Toggle breakpoint"
+
+
 map <leader>n <Action>(NewClass)
 let g:WhichKeyDesc_new_class = "<leader>n New class"
 
@@ -260,7 +277,7 @@ let g:WhichKeyDesc_code_actions = "<leader>ca Code Action"
 map <leader>cl <Action>(GotoSymbol)
 let g:WhichKeyDesc_goto_symbols = "<leader>cl Goto symbols"
 map <leader>co <Action>(OptimizeImports)
-let g:WhichKeyDesc_optimize_imports = "<leader>co Optimize imports"
+let g:WhichKeyDesc_optimize_import> = "<leader>co Optimize imports"
 map <leader>cr <Action>(RenameElement)
 let g:WhichKeyDesc_rename_element = "<leader>cr Rename element"
 map <leader>cf <Action>(ReformatCode)
