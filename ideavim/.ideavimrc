@@ -251,12 +251,12 @@ map <leader>bp <Action>(PinActiveEditorTab)
 let g:WhichKeyDesc_toggle_pin = "<leader>bp Toggle pin"
 
 " -- Debug --
-let g:WhichKeyDesc_debug = "<leader>b Debug"
+let g:WhichKeyDesc_debug = "<leader>d Debug"
 
 
 
-map <leader>b <Action>(ToggleLineBreakpoint)
-let g:WhichKeyDesc_toggle_breakpoint = "<leader>b Toggle breakpoint"
+map <leader>db <Action>(ToggleLineBreakpoint)
+let g:WhichKeyDesc_toggle_breakpoint = "<leader>db Toggle breakpoint"
 
 
 map <leader>n <Action>(NewClass)
