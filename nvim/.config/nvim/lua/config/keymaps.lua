@@ -26,3 +26,7 @@ end, { expr = true, desc = "Down (add to jumplist when count > 5)" })
 vim.keymap.set("n", "k", function()
   return (vim.v.count > 5 and "m'" .. vim.v.count or "") .. "k"
 end, { expr = true, desc = "Up (add to jumplist when count > 5)" })
+
+vim.keymap.set("n", "<leader>bm", function()
+  Snacks.picker.buffers({ modified = true })
+end, { desc = "Modified Buffers" })
