@@ -197,9 +197,9 @@ let g:WhichKeyDesc_prev_tab = "[b Previous Tab"
 map ]b <Action>(NextTab)
 let g:WhichKeyDesc_next_tab = "]b Next Tab"
 map ]d <Action>(GotoNextError)
-let g:WhichKeyDesc_next_error = "]b Next Error"
+let g:WhichKeyDesc_next_error = "]d Next Error"
 map [d <Action>(GotoPreviousError)
-let g:WhichKeyDesc_previous_error = "]b Previous Error"
+let g:WhichKeyDesc_previous_error = "[d Previous Error"
 
 map [p <Action>(PreviousProjectWindow)
 let g:WhichKeyDesc_prev_project = "[p Previous project"
