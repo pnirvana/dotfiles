@@ -98,7 +98,7 @@ function adapter.filter_dir(name)
 end
 
 function adapter.is_test_file(file_path)
-  return file_path:match("%.groovy$") ~= nil and file_path:match("[/\\]src[/\\]test[/\\]") ~= nil
+  return file_path:match("Spec%.groovy$") ~= nil and file_path:match("[/\\]src[/\\]test[/\\]") ~= nil
 end
 
 function adapter.discover_positions(path)
