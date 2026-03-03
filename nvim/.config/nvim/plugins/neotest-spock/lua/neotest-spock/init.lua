@@ -1,5 +1,9 @@
 local lib = require("neotest.lib")
 
+local config = {
+  maven_goal = "surefire:test",
+}
+
 local QUERY = [[
 (class_definition
   name: (identifier) @namespace.name) @namespace.definition
@@ -148,7 +152,7 @@ function adapter.build_spec(args)
     or ""
 
   local command = string.format(
-    "cd %s && rm -rf %s && %s test %s %s -Dsurefire.failIfNoSpecifiedTests=false",
+    ("cd %s && rm -rf %s && %s " .. config.maven_goal .. " %s %s -Dsurefire.failIfNoSpecifiedTests=false"),
     vim.fn.shellescape(module_root),
     vim.fn.shellescape(reports_dir),
     mvn_cmd,
@@ -315,7 +319,10 @@ function adapter.results(spec, result, tree)
 end
 
 setmetatable(adapter, {
-  __call = function(_, _opts)
+  __call = function(_, opts)
+    if opts and opts.maven_goal then
+      config.maven_goal = opts.maven_goal
+    end
     return adapter
   end,
 })
