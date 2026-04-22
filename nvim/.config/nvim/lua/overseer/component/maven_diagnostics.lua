@@ -31,19 +31,103 @@ local function parse_errors(lines)
   return errors
 end
 
+local function find_source_file(root, classname)
+  local simple = classname:match("%.([^%.]+)$") or classname
+  local dirs = {
+    root .. "/src/test/java",
+    root .. "/src/test/groovy",
+    root .. "/src/main/java",
+    root .. "/src/main/groovy",
+  }
+  for _, dir in ipairs(dirs) do
+    for _, ext in ipairs({ "java", "groovy" }) do
+      local hits = vim.fn.glob(dir .. "/**/" .. simple .. "." .. ext, false, true)
+      if #hits > 0 then return hits[1] end
+    end
+  end
+end
+
+local function decode_xml(s)
+  return s:gsub("&#10;", "\n"):gsub("&#13;", "\r")
+          :gsub("&amp;", "&"):gsub("&lt;", "<"):gsub("&gt;", ">")
+          :gsub("&quot;", '"'):gsub("&apos;", "'")
+end
+
+local function parse_surefire_xml(xml_path, root, start_time)
+  local stat = vim.uv.fs_stat(xml_path)
+  if not stat or stat.mtime.sec < start_time then return {} end
+
+  local ok, raw = pcall(vim.fn.readfile, xml_path)
+  if not ok then return {} end
+  local content = table.concat(raw, "\n")
+
+  local classname = content:match('<testsuite[^>]-name="([^"]*)"')
+  if not classname then return {} end
+
+  local source_file = find_source_file(root, classname)
+  local simple = classname:match("%.([^%.]+)$") or classname
+
+  local flat = content:gsub("\r?\n", "\0")
+  flat = flat:gsub("<testcase([^/]-)/>", "<testcase%1></testcase>")
+
+  local errors = {}
+  for attrs, body in flat:gmatch("<testcase([^>]-)>(.-)</testcase>") do
+    local method = attrs:match('name="([^"]*)"')
+    if not method then goto continue end
+
+    local is_failure = body:find("<failure") or body:find("<error")
+    if not is_failure then goto continue end
+
+    local raw_msg = body:match('<[fe][^>]-message="([^"]*)"') or "Test failed"
+    local msg = decode_xml(raw_msg):gsub("%z", " "):gsub("%s+$", "")
+    local first_line = msg:match("^([^\n]+)") or msg
+
+    local cdata = (body:match("<!%[CDATA%[(.-)%]%]>") or ""):gsub("%z", "\n")
+    local lnum = 1
+    if source_file then
+      local ln = cdata:match("%(?" .. vim.pesc(simple) .. "[^:]*:(%d+)%)")
+      lnum = ln and tonumber(ln) or 1
+    end
+
+    table.insert(errors, {
+      filename = source_file or "",
+      lnum = lnum,
+      col = 1,
+      text = method .. ": " .. first_line,
+      type = "E",
+      valid = source_file and 1 or 0,
+    })
+
+    ::continue::
+  end
+  return errors
+end
+
+local function parse_test_failures(root, start_time)
+  local errors = {}
+  for _, dir in ipairs({ root .. "/target/surefire-reports", root .. "/target/failsafe-reports" }) do
+    for _, xml in ipairs(vim.fn.glob(dir .. "/TEST-*.xml", false, true)) do
+      vim.list_extend(errors, parse_surefire_xml(xml, root, start_time))
+    end
+  end
+  return errors
+end
+
 local function apply_diagnostics(errors)
   vim.diagnostic.reset(ns)
   local by_buf = {}
   for _, err in ipairs(errors) do
-    local bufnr = vim.fn.bufadd(err.filename)
-    by_buf[bufnr] = by_buf[bufnr] or {}
-    table.insert(by_buf[bufnr], {
-      lnum = err.lnum - 1,
-      col = (err.col or 1) - 1,
-      message = err.text,
-      severity = vim.diagnostic.severity.ERROR,
-      source = "maven",
-    })
+    if err.valid == 1 then
+      local bufnr = vim.fn.bufadd(err.filename)
+      by_buf[bufnr] = by_buf[bufnr] or {}
+      table.insert(by_buf[bufnr], {
+        lnum = err.lnum - 1,
+        col = (err.col or 1) - 1,
+        message = err.text,
+        severity = vim.diagnostic.severity.ERROR,
+        source = "maven",
+      })
+    end
   end
   for bufnr, diags in pairs(by_buf) do
     vim.diagnostic.set(ns, bufnr, diags)
@@ -51,21 +135,24 @@ local function apply_diagnostics(errors)
 end
 
 return {
-  desc = "Parse Maven Java/Groovy compiler errors into quickfix and diagnostics",
+  desc = "Parse Maven Java/Groovy compiler errors and test failures into quickfix and diagnostics",
   params = {},
   constructor = function()
     local lines = {}
+    local start_time = os.time() - 1
     return {
       on_output_lines = function(_, _, new_lines)
         vim.list_extend(lines, new_lines)
       end,
       on_complete = function(_, task)
-        local errors = parse_errors(lines)
+        local compile_errors = parse_errors(lines)
         lines = {}
+        local test_errors = parse_test_failures(task.cwd, start_time)
+        local all_errors = vim.list_extend(vim.deepcopy(compile_errors), test_errors)
         vim.schedule(function()
-          vim.fn.setqflist({}, "r", { title = task.name, items = errors })
-          apply_diagnostics(errors)
-          if #errors > 0 then
+          vim.fn.setqflist({}, "r", { title = task.name, items = all_errors })
+          apply_diagnostics(all_errors)
+          if #all_errors > 0 then
             vim.cmd("copen")
           end
         end)
