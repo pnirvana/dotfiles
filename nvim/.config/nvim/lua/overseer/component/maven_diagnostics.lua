@@ -82,10 +82,14 @@ local function parse_surefire_xml(xml_path, root, start_time)
     local msg = decode_xml(raw_msg):gsub("%z", " "):gsub("%s+$", "")
     local first_line = msg:match("^([^\n]+)") or msg
 
-    local cdata = (body:match("<!%[CDATA%[(.-)%]%]>") or ""):gsub("%z", "\n")
     local lnum = 1
     if source_file then
-      local ln = cdata:match("%(?" .. vim.pesc(simple) .. "[^:]*:(%d+)%)")
+      local ext = source_file:match("%.(%a+)$") or "java"
+      local search = body:match("<failure[^>]*>(.-)</failure>")
+                  or body:match("<error[^>]*>(.-)</error>")
+                  or body
+      local ln = search:match(vim.pesc(simple) .. "%." .. ext .. ":(%d+)")
+              or search:match("%." .. ext .. ":(%d+)")
       lnum = ln and tonumber(ln) or 1
     end
 
@@ -140,6 +144,7 @@ return {
   constructor = function()
     local lines = {}
     local start_time = os.time() - 1
+    local origin_win = vim.api.nvim_get_current_win()
     return {
       on_output_lines = function(_, _, new_lines)
         vim.list_extend(lines, new_lines)
@@ -147,13 +152,26 @@ return {
       on_complete = function(_, task)
         local compile_errors = parse_errors(lines)
         lines = {}
-        local test_errors = parse_test_failures(task.cwd, start_time)
+        local ok, test_errors = pcall(parse_test_failures, task.cwd, start_time)
+        if not ok then
+          vim.notify("Maven test parsing error: " .. tostring(test_errors), vim.log.levels.WARN, { title = "Maven" })
+          test_errors = {}
+        end
         local all_errors = vim.list_extend(vim.deepcopy(compile_errors), test_errors)
         vim.schedule(function()
           vim.fn.setqflist({}, "r", { title = task.name, items = all_errors })
           apply_diagnostics(all_errors)
           if #all_errors > 0 then
-            vim.cmd("copen")
+            require("overseer").close()
+            local ok, trouble = pcall(require, "trouble")
+            if ok then
+              trouble.open({ mode = "maven" })
+            else
+              if vim.api.nvim_win_is_valid(origin_win) then
+                vim.api.nvim_set_current_win(origin_win)
+              end
+              vim.cmd("copen")
+            end
           end
         end)
       end,
