@@ -80,4 +80,18 @@ return {
       table.insert(opts.sections.lualine_x, 1, { "overseer" })
     end,
   },
+  {
+    "folke/trouble.nvim",
+    opts = function(_, opts)
+      opts.modes = opts.modes or {}
+      opts.modes.maven = {
+        mode = "diagnostics",
+        filter = {
+          function(item)
+            return item.item and item.item.source == "maven"
+          end,
+        },
+      }
+    end,
+  },
 }
