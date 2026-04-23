@@ -1,0 +1,15 @@
+# ~/.local/bin/xdg-open
+#!/bin/bash
+url="$1"
+
+osc8() {
+  if [[ -n "$TMUX" ]]; then
+    # tmux passthrough
+    printf '\x1BPtmux;\x1B\x1B]8;;%s\x1B\x1B\\\x1B\\%s\x1BPtmux;\x1B\x1B]8;;\x1B\x1B\\\x1B\\\n' "$url" "$url"
+  else
+    printf '\e]8;;%s\e\\%s\e]8;;\e\\\n' "$url" "$url"
+  fi
+}
+
+echo "🌐 Opening: $url"
+osc8 "$url"
