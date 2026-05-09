@@ -178,3 +178,6 @@ alias ls="eza --color=always --long --git --icons=always --no-user --no-time --n
 # End of LM Studio CLI section
 
 export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"
+
+# Created by `pipx` on 2026-05-08 21:07:57
+export PATH="$PATH:/Users/pascal/.local/bin"
